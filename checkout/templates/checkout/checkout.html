@@ -67,13 +67,13 @@
                     <div class="col-3">
                         <p class="my-0">${{ total | floatformat:2 }} </p>
                         <p class="my-0">${{ delivery | floatformat:2 }}</p>
-                        <p class="my-0">${{ grand_total | floatformat:2 }}</p>
+                        <p class="my-0"><strong>${{ grand_total | floatformat:2 }}</strong></p>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-lg-6">
                 <p class="text-muted">Please fill out the form below to complete your order</p>
-                <form action="{% url 'checkout' %}" method="POST" id="payment_form">
+                <form action="{% url 'checkout' %}" method="POST" id="payment-form">
                     {% csrf_token %}
                     <fieldset class="rounded px-3 mb-5">
                         <legend class="fieldset-label small text-black px-2 w-auto">Details</legend>
@@ -95,7 +95,7 @@
                                 <input class="form-check-input ml-2 mr-0" type="checkbox" id="id-save-info" name="save-info" checked>
                             {% else %}
                                 <label class="form-check-label" for="id-save-info">
-                                    <a class="text-info" href="{% url 'account_signup' %}">Create an account</a>
+                                    <a class="text-info" href="{% url 'account_signup' %}">Create an account</a> or 
                                     <a class="text-info" href="{% url 'account_login' %}">login</a> to save this information
                                 </label>
                             {% endif %}
@@ -107,7 +107,7 @@
                         <div class="mb-3" id="card-element"></div>
 
                         <!-- Used to display form errors -->
-                        <div class="mb-3 text-danger" id="card-erros" role="alert"></div>
+                        <div class="mb-3 text-danger" id="card-errors" role="alert"></div>
                     </fieldset>
 
                     <div class="submit-button text-right mt-5 mb-2">
@@ -134,4 +134,11 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block postloadjs %}
+    {{ block.super }}
+    {{ stripe_public_key|json_script:"id_stripe_public_key" }}
+    {{ client_secret|json_script:"id_client_secret" }}
+    <script src="{% static 'checkout/js/stripe_elements.js' %}"></script>
 {% endblock %}
